@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Helios Design — Product UX & Data Visualization</title>
+
+  <!-- Inter font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6.4.0 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <meta name="description" content="Helios Design — user-centered product design, rapid prototyping and clear data visualization.">
+
+  <style>
+    /* =========================
+       Design System Variables
+       ========================= */
+    :root{
+      --color-primary: #6366f1;    /* Indigo */
+      --color-primary-700: #4f46e5;
+      --color-secondary: #0ea5e9;  /* Sky Blue */
+      --text-dark: #1e293b;
+      --text-light: #64748b;
+      --bg-light: #f8fafc;
+      --surface: #ffffff;
+      --radius-sm: 0.5rem;
+      --radius-md: 0.75rem;
+      --radius-lg: 1rem;
+      --shadow-sm: 0 4px 6px -1px rgba(0,0,0,0.1);
+      --shadow-lg: 0 12px 30px rgba(16,24,40,0.08);
+      --transition-default: all 0.3s ease;
+      --max-width: 1200px;
+      --pad-mobile: 1.5rem;
+      --pad-desktop: 2rem;
+      --section-space-mobile: 3rem;
+      --section-space-desktop: 5rem;
+      --base-font-size: 16px;
+      --grid-gap: 2rem;
+    }
+
+    /* =========================
+       Base Typography & Layout
+       ========================= */
+    html { font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, "Helvetica Neue", Arial; font-size:var(--base-font-size); scroll-behavior:smooth; }
+    body { margin:0; color:var(--text-dark); background:var(--bg-light); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; line-height:1.6; }
+
+    h1{ font-size:3.5rem; line-height:1.02; margin:0; font-weight:800; }
+    h2{ font-size:2.5rem; margin:0; font-weight:700; }
+    h3{ font-size:1.5rem; margin:0; font-weight:700; }
+    p { margin:0 0 1rem 0; color:var(--text-dark); }
+    .muted { color:var(--text-light); }
+
+    @media (max-width:480px){
+      h1{ font-size:2rem; }
+      h2{ font-size:1.6rem; }
+      h3{ font-size:1.1rem; }
+    }
+
+    .container {
+      width: calc(100% - (2 * var(--pad-mobile)));
+      max-width: var(--max-width);
+      margin:0 auto;
+      padding: var(--pad-mobile);
+    }
+    @media (min-width:768px){
+      .container { padding: var(--pad-desktop); width: calc(100% - (2 * var(--pad-desktop))); }
+    }
+
+    section { padding: var(--section-space-mobile) 0; }
+    @media (min-width:768px){
+      section { padding: var(--section-space-desktop) 0; }
+    }
+
+    .grid { display:grid; gap:var(--grid-gap); }
+    .auto-fit { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+
+    a { color:inherit; text-decoration:none; }
+
+    /* =========================
+       Header / Navigation (BEM-like)
+       ========================= */
+    .site-header {
+      position: sticky;
+      top:0;
+      z-index:80;
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.95));
+      backdrop-filter: blur(6px);
+      box-shadow: var(--shadow-sm);
+    }
+    .site-header__inner {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      height:68px;
+      gap:1rem;
+    }
+    .brand {
+      display:flex;
+      gap:0.75rem;
+      align-items:center;
+      text-decoration:none;
+      color:var(--text-dark);
+    }
+    .brand__logo {
+      width:48px; height:48px; border-radius:0.6rem;
+      display:grid; place-items:center; color:white; font-weight:800;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      box-shadow: var(--shadow-lg);
+    }
+    .brand__text { font-weight:800; font-size:1rem; }
+    .brand__tag { font-size:0.85rem; color:var(--text-light); }
+
+    .nav {
+      display:flex; align-items:center; gap:0.6rem;
+    }
+    .nav__links { display:none; gap:0.5rem; align-items:center; }
+    .nav__link {
+      padding:0.45rem 0.7rem; border-radius:0.5rem; font-weight:600; color:var(--text-dark);
+      transition: var(--transition-default);
+    }
+    .nav__link:hover, .nav__link:focus { transform: translateY(-3px); box-shadow: var(--shadow-sm); outline:none; color:var(--color-primary); }
+
+    .btn {
+      display:inline-flex; align-items:center; gap:0.6rem; padding:0.56rem 0.95rem; border-radius:0.6rem; font-weight:700; cursor:pointer; border: none; transition: var(--transition-default);
+    }
+    .btn--primary { background: var(--color-primary); color: #fff; box-shadow: 0 8px 20px rgba(99,102,241,0.12); }
+    .btn--primary:hover { background: var(--color-primary-700); transform: translateY(-3px); }
+    .btn--ghost { background: transparent; border:1px solid rgba(16,24,40,0.04); color:var(--text-dark); }
+
+    .hamburger {
+      width:44px; height:44px; border-radius:0.6rem; display:grid; place-items:center; background:var(--surface); border:1px solid rgba(16,24,40,0.04); cursor:pointer;
+    }
+    .hamburger:focus { outline:3px solid rgba(99,102,241,0.12); }
+
+    .mobile-menu {
+      display:none;
+      position:absolute; left:0; right:0; top:68px;
+      background:var(--surface); border-bottom-left-radius:var(--radius-lg); border-bottom-right-radius:var(--radius-lg);
+      box-shadow: var(--shadow-lg); padding:1rem;
+    }
+    .mobile-menu.open { display:block; animation: slideDown .18s ease; }
+    @keyframes slideDown { from { opacity:0; transform: translateY(-6px); } to { opacity:1; transform:none; } }
+
+    @media (min-width:768px){
+      .nav__links { display:flex; }
+      .hamburger { display:none; }
+      .mobile-menu { display:none !important; }
+    }
+
+    /* =========================
+       HERO
+       ========================= */
+    .hero {
+      background: linear-gradient(180deg, rgba(99,102,241,0.03), transparent);
+      border-radius: var(--radius-lg);
+      padding:1rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .hero__grid { display:grid; gap:1rem; }
+    @media (min-width:768px){
+      .hero__grid { grid-template-columns: 1fr 1fr; align-items:center; gap:2rem; }
+    }
+    .hero__eyebrow { display:inline-flex; gap:0.6rem; padding:0.25rem 0.6rem; border-radius:999px; background: rgba(14,165,233,0.06); color:var(--color-secondary); font-weight:700; }
+    .hero__title { margin-top:0.5rem; margin-bottom:0.6rem; }
+    .hero__lead { color:var(--text-light); font-size:1.05rem; margin-bottom:1rem; }
+
+    .hero__visual {
+      border-radius: var(--radius-md);
+      overflow:hidden;
+      height:320px;
+      box-shadow: var(--shadow-lg);
+      transition: var(--transition-default);
+    }
+    .hero__visual img { width:100%; height:100%; object-fit:cover; display:block; }
+
+    .hero__kpis { display:grid; grid-template-columns:repeat(2,1fr); gap:0.6rem; margin-top:1rem; max-width:520px; }
+    .kpi { background:var(--surface); padding:0.6rem; border-radius:0.6rem; display:flex; gap:0.6rem; align-items:center; box-shadow:var(--shadow-sm); }
+    .kpi strong { display:block; font-weight:800; }
+
+    /* =========================
+       SERVICES / FEATURES
+       ========================= */
+    .services__header { text-align:center; margin-bottom:1rem; }
+    .services__grid {
+      display:grid;
+      gap:1.5rem;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width:640px){ .services__grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width:1024px){ .services__grid { grid-template-columns: repeat(3, 1fr); } }
+
+    .service-card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding:1.25rem;
+      box-shadow: var(--shadow-sm);
+      display:flex;
+      gap:1rem;
+      align-items:flex-start;
+      transition: var(--transition-default);
+    }
+    .service-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
+    .service__icon {
+      width:56px; height:56px; flex:0 0 56px; border-radius:0.6rem; display:grid; place-items:center; color:white;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      box-shadow: 0 6px 18px rgba(99,102,241,0.12);
+    }
+
+    /* =========================
+       CONTACT / LEAD FORM
+       ========================= */
+    .contact {
+      display:grid;
+      gap:1rem;
+    }
+    @media (min-width:768px){
+      .contact { grid-template-columns: 1fr 1fr; align-items:start; gap:2rem; }
+    }
+    .contact__card {
+      background:var(--surface); padding:1.25rem; border-radius:var(--radius-lg); box-shadow:var(--shadow-sm);
+    }
+
+    .form-field { display:flex; flex-direction:column; gap:0.45rem; margin-bottom:0.6rem; }
+    label { font-weight:700; font-size:0.95rem; color:var(--text-dark); }
+    input[type="text"], input[type="email"], textarea, select {
+      border:1px solid rgba(16,24,40,0.06); padding:0.7rem 0.85rem; border-radius:0.6rem; font-size:1rem; background:white; transition: var(--transition-default);
+    }
+    input:focus, textarea:focus, select:focus { outline:none; box-shadow: 0 0 0 6px rgba(99,102,241,0.06); border-color: var(--color-primary); }
+    input:invalid, textarea:invalid { border-color:#dc2626; }
+
+    .error { color:#b91c1c; font-size:0.9rem; display:none; }
+    .error.active { display:block; }
+
+    /* =========================
+       FOOTER
+       ========================= */
+    footer.site-footer {
+      background:#071023; color:#dbeafe; padding:2rem 0;
+    }
+    .footer__grid { display:grid; gap:1rem; }
+    @media (min-width:768px){
+      .footer__grid { grid-template-columns: 1fr 1fr 1fr; align-items:start; }
+    }
+    .footer__brand { font-weight:800; font-size:1.05rem; }
+    .footer__links a { display:block; color:var(--text-light); text-decoration:none; margin:0.35rem 0; transition: var(--transition-default); }
+    .footer__links a:hover { color:#fff; transform:translateY(-2px); }
+
+    .socials { display:flex; gap:0.6rem; }
+    .socials a { display:inline-grid; place-items:center; width:40px; height:40px; border-radius:999px; background:rgba(255,255,255,0.04); color:var(--text-dark); text-decoration:none; }
+
+    .footer__bottom { margin-top:1rem; color:rgba(219,234,254,0.75); font-size:0.95rem; }
+
+    /* Accessibility focus */
+    :focus { outline:none; }
+    :focus-visible { outline: 3px solid rgba(99,102,241,0.12); border-radius:6px; }
+
+    /* Utilities */
+    .sr-only { position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0; }
+  </style>
+</head>
+<body>
+
+  <!-- Header / Nav -->
+  <header class="site-header" role="banner">
+    <div class="container site-header__inner">
+      <a class="brand" href="#home" aria-label="Helios Design home">
+        <div class="brand__logo" aria-hidden="true">HD</div>
+        <div>
+          <div class="brand__text">Helios Design</div>
+          <div class="brand__tag">Product Design • Data Viz</div>
+        </div>
+      </a>
+
+      <nav class="nav" role="navigation" aria-label="Main navigation">
+        <div class="nav__links" id="desktopLinks" aria-hidden="true">
+          <a class="nav__link" href="#home">Home</a>
+          <a class="nav__link" href="#services">Services</a>
+          <a class="nav__link" href="#contact">Contact</a>
+          <a class="nav__link" href="#about">About</a>
+        </div>
+
+        <button class="btn btn--ghost" onclick="document.getElementById('contact')?.scrollIntoView({behavior:'smooth'})" aria-label="Request demo">Request demo</button>
+        <button class="btn btn--primary" onclick="document.getElementById('contact')?.scrollIntoView({behavior:'smooth'})" aria-label="Get started">Get started</button>
+
+        <button id="menuToggle" class="hamburger" aria-controls="mobileMenu" aria-expanded="false" aria-label="Open menu">
+          <i class="fa-solid fa-bars" aria-hidden="true"></i>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Mobile menu -->
+    <div id="mobileMenu" class="mobile-menu" role="dialog" aria-modal="false" aria-label="Mobile menu" aria-hidden="true">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; gap:0.6rem; align-items:center;">
+          <div class="brand__logo" style="width:40px;height:40px;font-size:0.95rem;">HD</div>
+          <div style="font-weight:800;">Helios Design</div>
+        </div>
+        <button id="menuClose" class="hamburger" aria-label="Close menu"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+      </div>
+
+      <nav style="margin-top:0.9rem; display:flex; flex-direction:column; gap:0.6rem;">
+        <a class="nav__link" href="#home" onclick="toggleMobile(false)">Home</a>
+        <a class="nav__link" href="#services" onclick="toggleMobile(false)">Services</a>
+        <a class="nav__link" href="#about" onclick="toggleMobile(false)">About</a>
+        <a class="nav__link" href="#contact" onclick="toggleMobile(false)">Contact</a>
+        <div style="margin-top:0.6rem;">
+          <button class="btn btn--primary" style="width:100%;" onclick="toggleMobile(false); document.getElementById('contact')?.scrollIntoView({behavior:'smooth'})">Get started</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="home" role="main">
+    <!-- HERO -->
+    <section class="container hero" aria-labelledby="heroTitle">
+      <div class="hero__grid">
+        <div>
+          <div class="hero__eyebrow" aria-hidden="true"><i class="fa-solid fa-rocket" style="color:var(--color-secondary)"></i>&nbsp; Product Design</div>
+          <h1 id="heroTitle" class="hero__title">Design products users understand and teams can ship.</h1>
+          <p class="hero__lead">We design intuitive interfaces and clear analytics that allow product teams to move faster and make confident decisions. From rapid prototypes to production-ready design systems.</p>
+
+          <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-top:0.9rem;">
+            <button class="btn btn--primary" onclick="document.getElementById('contact')?.scrollIntoView({behavior:'smooth'})" aria-label="Start a project">
+              <i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Start a project
+            </button>
+            <a class="btn btn--ghost" href="#services" aria-label="Learn more about services">Learn more</a>
+          </div>
+
+          <div class="hero__kpis" aria-hidden="true" style="margin-top:1rem;">
+            <div class="kpi"><i class="fa-solid fa-stopwatch" style="color:var(--color-primary)"></i><div style="margin-left:0.5rem;"><strong>2–3 weeks</strong><span class="muted" style="display:block;font-size:0.9rem;">to prototype</span></div></div>
+            <div class="kpi"><i class="fa-solid fa-chart-line" style="color:var(--color-secondary)"></i><div style="margin-left:0.5rem;"><strong>30% ↑</strong><span class="muted" style="display:block;font-size:0.9rem;">Avg decision speed</span></div></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="hero__visual" role="img" aria-label="Design team collaborating on wireframes and dashboards">
+            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1400&auto=format&fit=crop" alt="Team collaborating on wireframes and data dashboard screens" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services" class="container" aria-labelledby="servicesTitle">
+      <header class="services__header">
+        <h2 id="servicesTitle">Services</h2>
+        <p class="muted">Full-service product design + analytics to help you move faster with confidence.</p>
+      </header>
+
+      <div class="services__grid" role="list" aria-label="List of services">
+        <article class="service-card" role="listitem" aria-labelledby="svc1">
+          <div class="service__icon" aria-hidden="true"><i class="fa-solid fa-user-check"></i></div>
+          <div>
+            <h3 id="svc1">User Research & Testing</h3>
+            <p class="muted">Interview studies, usability sessions and journey mapping to identify pain points and opportunities.</p>
+          </div>
+        </article>
+
+        <article class="service-card" role="listitem" aria-labelledby="svc2">
+          <div class="service__icon" aria-hidden="true"><i class="fa-solid fa-paintbrush"></i></div>
+          <div>
+            <h3 id="svc2">UI & Interaction Design</h3>
+            <p class="muted">Accessible, scalable interfaces with clear interaction patterns and visual polish.</p>
+          </div>
+        </article>
+
+        <article class="service-card" role="listitem" aria-labelledby="svc3">
+          <div class="service__icon" aria-hidden="true"><i class="fa-solid fa-vial"></i></div>
+          <div>
+            <h3 id="svc3">Prototyping & Validation</h3>
+            <p class="muted">Clickable prototypes for rapid validation with users and stakeholders.</p>
+          </div>
+        </article>
+
+        <article class="service-card" role="listitem" aria-labelledby="svc4">
+          <div class="service__icon" aria-hidden="true"><i class="fa-solid fa-chart-pie"></i></div>
+          <div>
+            <h3 id="svc4">Data Visualization</h3>
+            <p class="muted">Dashboards and visuals that clarify decision-making and spotlight key metrics.</p>
+          </div>
+        </article>
+
+        <article class="service-card" role="listitem" aria-labelledby="svc5">
+          <div class="service__icon" aria-hidden="true"><i class="fa-solid fa-cubes"></i></div>
+          <div>
+            <h3 id="svc5">Design Systems</h3>
+            <p class="muted">Component libraries and tokens to keep products consistent and development fast.</p>
+          </div>
+        </article>
+
+        <article class="service-card" role="listitem" aria-labelledby="svc6">
+          <div class="service__icon" aria-hidden="true"><i class="fa-solid fa-road"></i></div>
+          <div>
+            <h3 id="svc6">Strategy & Roadmaps</h3>
+            <p class="muted">Prioritized plans and workshops to align stakeholders on measurable outcomes.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- CONTACT / LEAD FORM -->
+    <section id="contact" class="container" aria-labelledby="contactTitle">
+      <header style="text-align:center; margin-bottom:1rem;">
+        <h2 id="contactTitle">Contact Us</h2>
+        <p class="muted">Tell us about your project and we'll propose a concise plan and timeline.</p>
+      </header>
+
+      <div class="grid" style="grid-template-columns:1fr; gap:1rem;">
+        <div class="contact__card contact__info contact__card" aria-label="Contact information">
+          <h3>Get in touch</h3>
+          <p class="muted">Email us a short brief or schedule a quick call — we'll respond within 2 business days.</p>
+
+          <div style="margin-top:1rem;">
+            <strong>Email</strong>
+            <p class="muted" style="margin-top:0.25rem;">hello@heliosdesign.com</p>
+          </div>
+
+          <div style="margin-top:0.6rem;">
+            <strong>Phone</strong>
+            <p class="muted" style="margin-top:0.25rem;">+91 98765 43210</p>
+          </div>
+
+          <div style="margin-top:0.6rem;">
+            <strong>Location</strong>
+            <p class="muted" style="margin-top:0.25rem;">Bengaluru, India — Remote-friendly</p>
+          </div>
+
+          <img src="https://images.unsplash.com/photo-1528909514045-2fa4ac7a08ba?q=80&w=1200&auto=format&fit=crop" alt="Map and office thumbnail" style="width:100%; margin-top:1rem; border-radius:0.6rem; display:block; box-shadow:var(--shadow-sm)" loading="lazy">
+        </div>
+
+        <form id="leadForm" class="contact__card" aria-label="Lead contact form" novalidate>
+          <div style="max-width:640px;">
+            <div class="form-field">
+              <label for="name">Name</label>
+              <input id="name" name="name" type="text" required minlength="2" placeholder="Your full name" />
+              <div id="err-name" class="error" aria-live="polite">Please enter your name (2+ characters).</div>
+            </div>
+
+            <div class="form-field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" required placeholder="you@company.com" />
+              <div id="err-email" class="error" aria-live="polite">Please enter a valid email address.</div>
+            </div>
+
+            <div class="form-field">
+              <label for="subject">Subject</label>
+              <input id="subject" name="subject" type="text" required minlength="4" placeholder="Project e.g., Dashboard redesign" />
+              <div id="err-subject" class="error" aria-live="polite">Please add a short subject (4+ characters).</div>
+            </div>
+
+            <div class="form-field">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" rows="6" required minlength="10" placeholder="Briefly describe goals, timeline and budget (if available)"></textarea>
+              <div id="err-message" class="error" aria-live="polite">Please enter a brief message (10+ characters).</div>
+            </div>
+
+            <div style="display:flex; gap:0.6rem; margin-top:0.5rem;">
+              <button type="submit" class="btn btn--primary" aria-label="Send message"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Send message</button>
+              <button type="reset" class="btn btn--ghost" aria-label="Reset form">Reset</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ABOUT (optional anchor target) -->
+    <section id="about" class="container" aria-labelledby="aboutTitle">
+      <header style="text-align:center; margin-bottom:1rem;">
+        <h2 id="aboutTitle">About Helios</h2>
+        <p class="muted">We are a small multidisciplinary team building design-first products powered by research and data.</p>
+      </header>
+
+      <div class="grid auto-fit" style="align-items:stretch;">
+        <div class="contact__card">
+          <h3 style="margin-bottom:0.5rem;">Our approach</h3>
+          <p class="muted">We blend qualitative research, rapid prototyping, and actionable analytics. Focused deliverables with measurable outcomes.</p>
+        </div>
+
+        <div class="contact__card">
+          <h3 style="margin-bottom:0.5rem;">Why work with us</h3>
+          <p class="muted">Clear communication, tight iterations, and pragmatic design systems that make engineering handoffs smooth.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer__grid">
+      <div>
+        <div class="footer__brand">Helios Design</div>
+        <p class="muted" style="margin-top:0.5rem;">Product design & data visualization — meaningful interfaces that scale.</p>
+      </div>
+
+      <div class="footer__links" aria-label="Footer links">
+        <a href="#home">Home</a>
+        <a href="#services">Services</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </div>
+
+      <div>
+        <div style="display:flex; gap:0.6rem; align-items:center;">
+          <div class="muted" style="margin-right:0.6rem;">Follow</div>
+          <div class="socials" role="list">
+            <a href="#" aria-label="X / Twitter"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+            <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin" aria-hidden="true"></i></a>
+            <a href="#" aria-label="GitHub"><i class="fa-brands fa-github" aria-hidden="true"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div style="grid-column:1/-1; margin-top:1rem;">
+        <div class="footer__bottom">© <span id="currentYear"></span> Helios Design — All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // =========================
+    // Small interactions & accessibility
+    // =========================
+
+    // Footer year
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+    // Mobile menu toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const menuClose = document.getElementById('menuClose');
+
+    function toggleMobile(open) {
+      const isOpen = mobileMenu.classList.contains('open');
+      if (typeof open === 'boolean') {
+        if (open) {
+          mobileMenu.classList.add('open');
+          mobileMenu.setAttribute('aria-hidden', 'false');
+          menuToggle.setAttribute('aria-expanded', 'true');
+        } else {
+          mobileMenu.classList.remove('open');
+          mobileMenu.setAttribute('aria-hidden', 'true');
+          menuToggle.setAttribute('aria-expanded', 'false');
+        }
+        return;
+      }
+      if (isOpen) {
+        mobileMenu.classList.remove('open');
+        mobileMenu.setAttribute('aria-hidden', 'true');
+        menuToggle.setAttribute('aria-expanded', 'false');
+      } else {
+        mobileMenu.classList.add('open');
+        mobileMenu.setAttribute('aria-hidden', 'false');
+        menuToggle.setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    menuToggle.addEventListener('click', () => toggleMobile());
+    menuClose.addEventListener('click', () => toggleMobile(false));
+
+    // Close on escape
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') toggleMobile(false); });
+
+    // Close when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!mobileMenu.contains(e.target) && !menuToggle.contains(e.target) && mobileMenu.classList.contains('open')) {
+        toggleMobile(false);
+      }
+    });
+
+    // Progressive form validation with helpful feedback
+    const form = document.getElementById('leadForm');
+    const errName = document.getElementById('err-name');
+    const errEmail = document.getElementById('err-email');
+    const errSubject = document.getElementById('err-subject');
+    const errMessage = document.getElementById('err-message');
+
+    function isEmailValid(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function showError(el) {
+      el.classList.add('active');
+    }
+    function hideError(el) {
+      el.classList.remove('active');
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      let valid = true;
+
+      const name = form.name.value.trim();
+      const email = form.email.value.trim();
+      const subject = form.subject.value.trim();
+      const message = form.message.value.trim();
+
+      [errName, errEmail, errSubject, errMessage].forEach(hideError);
+
+      if (name.length < 2) { showError(errName); valid = false; }
+      if (!isEmailValid(email)) { showError(errEmail); valid = false; }
+      if (subject.length < 4) { showError(errSubject); valid = false; }
+      if (message.length < 10) { showError(errMessage); valid = false; }
+
+      if (!valid) {
+        const firstError = document.querySelector('.error.active');
+        if (firstError) {
+          const input = firstError.previousElementSibling;
+          if (input) input.focus();
+        }
+        return;
+      }
+
+      // simulate submit
+      const submitBtn = form.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = 'Sending...';
+
+      setTimeout(() => {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+        form.reset();
+        // minimal accessible feedback
+        alert('Thanks! Your message has been received. We will reply within 2 business days.');
+      }, 900);
+    });
+
+    // Improve keyboard focus for anchor links (smooth scroll is set via CSS)
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', (e) => {
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          target.setAttribute('tabindex', '-1');
+          target.focus({ preventScroll: true });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
